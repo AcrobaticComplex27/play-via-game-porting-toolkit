@@ -1,0 +1,76 @@
+Install Game Porting Toolkit on Silicon Mac and Play Genshin Impact
+
+Tested device: M2 MacBook Air base model 8+256
+MacOS Version: Sonoma 14.5
+Date: 19 May 2024
+Tested game version: 4.6
+
+Disclaimer: Your hoyoverse account can be banned. Use at your own risk.
+
+Steps:
+1. Download Xcode Command Line Tools (CLT) and Game Porting Toolkit (GPT).
+Login your Apple ID in a browser. Go to https://developer.apple.com/download/all then search and download the .dmg files.
+Tested version: CLT 15.1, GPT 1.1
+File names: Command_Line_Tools_for_Xcode_15.1.dmg and Game_Porting_Toolkit_1.1.dmg
+
+2. Open Command_Line_Tools_for_Xcode_15.1.dmg to install.
+
+3. Install Rosetta and x86_64 Homebrew.
+In Terminal:
+softwareupdate --install-rosetta
+arch -x86_64 zsh
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+4. Use prebuild formula to install Game Porting Toolkit. Credit goes to gcenx.
+In Terminal:
+brew tap gcenx/homebrew-apple
+brew install gcenx/wine/game-porting-toolkit
+brew upgrade gcenx/wine/game-porting-toolkit
+
+5. Mount Game_Porting_Toolkit_1.1.dmg by double clicking it in Finder.
+
+6. Copy the lib directory from the mount to the compiled Game Porting Toolkit directory.
+In Terminal:
+rsync --archive \
+  '/Volumes/Game Porting Toolkit-1.1/redist/lib' \
+  '/usr/local/opt/game-porting-toolkit'
+
+Below I am not using any Wine prefix. By default the game will be installed to a hidden directory ~/.wine
+In Finder you can press Command+Shift+Dot to show hidden files.
+
+7. Configure Wine.
+In Terminal:
+wine64 winecfg
+
+Under Application tab, change Windows Version to Windows 10. Click Apply.
+Under Graphics tab, change screen resolution to native. Mine is 224 dpi.
+Click Apply and OK.
+
+8. Download the game installer and open it through Wine.
+File name: GenshinImpact_install_ua_1c7f03a4e655.exe
+In Terminal:
+WINEESYNC=1 wine64 ~/Downloads/GenshinImpact_install_ua_1c7f03a4e655.exe
+
+Go through the process to install the game launcher. Then open the launcher in Japanese locale and start downloading the game. Since 1/4 of the game is audio, later I won’t have to download another audio pack.
+In terminal:
+WINEESYNC=1 LC_ALL=ja_JP.UTF-8 wine64 'C:\Program Files\Genshin Impact\launcher.exe'
+
+9. After download, close launcher first. Edit registry.
+In Terminal:
+wine64 regedit
+
+In ‘HKEY_CURRENT_USER\Software\Wine’, right click to add key. Name it to ‘Mac Driver’.
+Then in Mac Driver, right click to add string value. Name it ‘RetinaMode’.
+Right click on RetinaMode, click modify, set value data to ‘Y’.
+
+(Need to do this every time before launch, or it will snap back to lower resolution.)
+In ‘HKEY_CURRENT_USER\Software\miHoYo\Genshin Impact’, modify ‘Screenmanager Resolution Height_h**********’ and ‘Screenmanager Resolution Width_h*********’ to native height and width respectively. Mine is 1864 and 2880 in decimal.
+Close the window.
+
+10. Launch the game.
+In Terminal:
+WINEESYNC=1 wine64 'C:\Program Files\Genshin Impact\launcher.exe'
+
+11. After login, click Esc then the gear icon for settings. Now you can change the game language and graphics settings. Mine is 60fps, no v-sync, 0.6 render resolution, others low.
+
+Result: Game is playable but with some stutters. Not worth my effort. But for other Windows games the procedure is similar.
