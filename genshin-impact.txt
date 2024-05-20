@@ -1,6 +1,6 @@
 Install Game Porting Toolkit on Silicon Mac and Play Genshin Impact
 
-Tested device: M2 MacBook Air base model 8+256
+Tested device: M2 MacBook Air 15" base model 8+256
 MacOS Version: Sonoma 14.5
 Date: 19 May 2024
 Tested game version: 4.6
